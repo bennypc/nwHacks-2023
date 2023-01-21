@@ -6,22 +6,22 @@ import {
   ChartBarIcon,
   FolderIcon,
   HomeIcon,
-  InboxIcon,
+  ArrowUpTrayIcon,
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Documents", href: "#", icon: InboxIcon, current: false },
-  { name: "Results", href: "#", icon: ChartBarIcon, current: false },
+  { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
+  { name: "Upload", href: "upload", icon: ArrowUpTrayIcon, current: false },
+  { name: "Results", href: "results", icon: ChartBarIcon, current: true },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Dashboard() {
+export default function DashboardResults() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -153,14 +153,13 @@ export default function Dashboard() {
 
         {/* Static sidebar for desktop */}
         <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex flex-shrink-0 items-center px-4">
                 <img
                   className="h-8 w-auto"
                   src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/001/310/023/datas/original.png"
-                  alt="Your Company"
+                  alt="Logo"
                 />
               </div>
               <nav className="mt-5 flex-1 space-y-1 px-2">
@@ -227,7 +226,7 @@ export default function Dashboard() {
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h1 className="text-2xl font-semibold text-gray-900">
-                  Dashboard
+                  Results
                 </h1>
               </div>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
