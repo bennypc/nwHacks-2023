@@ -1,8 +1,8 @@
 import { Route, Routes, Link } from "react-router-dom";
 import "./App.css";
-import DashboardHome from "./components/DashboardHome";
-import DashboardResults from "./components/DashboardResults";
-import DashboardUpload from "./components/DashboardUpload";
+import DashboardHome from "./components/DashboardPages/DashboardHome";
+import DashboardResults from "./components/DashboardPages/DashboardResults";
+import DashboardUpload from "./components/DashboardPages/DashboardUpload";
 
 function App() {
   return (

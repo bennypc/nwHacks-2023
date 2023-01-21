@@ -10,6 +10,7 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import FileDrop from "../FileDrop";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
@@ -230,7 +231,9 @@ export default function DashboardUpload() {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 {/* Replace later*/}
                 <div className="py-4">
-                  <div className="h-96 rounded-lg border-4 border-dashed border-gray-200" />
+                  <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 text-center ">
+                    <FileDrop />
+                  </div>
                 </div>
                 {/* /End replace */}
               </div>
