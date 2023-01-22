@@ -15,6 +15,7 @@ export default function FileDrop() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [filesToUpload, setFilesToUpload] = useState([]);
   const [analyzedData, setAnalyzedData] = useState({});
+  const [poseEstimation, setPoseEstimation] = useState({});
 
   const getVideoAnalysis = (url) => {
     console.log("request made");
@@ -30,6 +31,20 @@ export default function FileDrop() {
       setAnalyzedData(res);
     });
   };
+
+  const getPoseEstimation = (url) => {
+    console.log('got pose estimation request')
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/",
+      data: { urlLink: url },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setPoseEstimation(res);
+    })
+  }
 
   useEffect(() => {
     console.log(analyzedData);
@@ -60,6 +75,7 @@ export default function FileDrop() {
           // download url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             getVideoAnalysis(url);
+            getPoseEstimation(url);
           });
         }
       );
@@ -97,11 +113,11 @@ export default function FileDrop() {
           </ul>
         </aside>
 
-        {/* <div>
+        {/* {<div>
         <input type="file" onChange={handleChange} accept="" />
         <button onClick={handleUpload}>Upload to Firebase</button>
         <p>{percent} "% done"</p>
-      </div> */}
+      </div>} */}
       </div>
       {filesToUpload.length !== 0 && (
         <div className="flex  align-center flex-col items-center">
