@@ -8,7 +8,7 @@ const getUploadUrl = (videoUrl) => {
     return axios({
       method: "POST",
       url: `https://livepeer.studio/api/asset/import`,
-      data: JSON.stringify({ url: videoUrl, name: "swear2" }),
+      data: JSON.stringify({ url: videoUrl, name: "final" }),
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",

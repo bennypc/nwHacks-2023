@@ -5,8 +5,8 @@ import axios from 'axios';
  
 
 export function Livepeer() {
-  const [url, setUrl] = useState("https://firebasestorage.googleapis.com/v0/b/nwhacks2023-5f0e8.appspot.com/o/IMG_1711.MOV?alt=media&token=7fea6cf9-59de-4f22-b137-310f6a53b00e");
-  const [playbackUrl, setPlaybackUrl] = useState("");
+  const [url, setUrl] = useState("https://firebasestorage.googleapis.com/v0/b/nwhacks2023-5f0e8.appspot.com/o/anything.mp4?alt=media&token=ca200e24-8561-42d1-92a7-79b6e351227c");
+  const [playbackUrl, setPlaybackUrl] = useState("https://lp-playback.com/hls/148fhhnmhsfl7pyj/index.m3u8");
 
   useEffect(() => {
     axios({
