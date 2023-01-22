@@ -1,23 +1,29 @@
+from os import sendfile
 import cv2
 import mediapipe as mp
 import numpy as np
 import time
 from flask import Flask, request
+from flask_cors import CORS
 import flask
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/urls', methods=["GET"])
 def users():
+    # request_body = request.get_json()
+    # print(request_body)
     print("url endpoint reached...")
     with open("urls.json", "r") as f:
         data = json.load(f)
         return flask.jsonify(data)
 
-@app.route('/', methods=['POST'])
+#main function
+@app.route('/', methods=["POST"])
 def analyse():
-    #url = request.get_json()['urlLink']
+    url = request.get_json()["video"]
     mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
@@ -25,7 +31,7 @@ def analyse():
 
     drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
-    cap = cv2.VideoCapture("https://firebasestorage.googleapis.com/v0/b/nwhacks2023-5f0e8.appspot.com/o/IMG_1711.MOV?alt=media&token=7fea6cf9-59de-4f22-b137-310f6a53b00e")
+    cap = cv2.VideoCapture(url)
     prevText = ""
     count = 0
 
@@ -34,7 +40,7 @@ def analyse():
    
     size = (frame_width, frame_height)
 
-    result = cv2.VideoWriter('out.avi', cv2.VideoWriter_fourcc(*'MJPG'), 30, size)
+    result = cv2.VideoWriter('server/poseBackend/outputVideos/out.avi', cv2.VideoWriter_fourcc(*"MJPG"), 30, size)
 
     while cap.isOpened():
         success, image = cap.read()
@@ -108,7 +114,6 @@ def analyse():
                 y = angles[1] * 360
                 z = angles[2] * 360
             
-
                 # See where the user's head tilting
                 if y < -7:
                     text = "Looking Left"
@@ -134,17 +139,15 @@ def analyse():
                 cv2.line(image, p1, p2, (255, 0, 0), 3)
 
                 # Add the text on the image
-                cv2.putText(image, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+                cv2.putText(image, text, (20, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
                 cv2.putText(image, "x: " + str(np.round(x,2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 cv2.putText(image, "y: " + str(np.round(y,2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 cv2.putText(image, "z: " + str(np.round(z,2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
 
             end = time.time()
             totalTime = end - start
 
             fps = 1 / totalTime
-            #print("FPS: ", fps)
 
             cv2.putText(image, f'FPS: {int(fps)}', (20,450), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,255,0), 2)
 
@@ -159,7 +162,6 @@ def analyse():
 
         if cv2.waitKey(5) == 32:
             break
-
     cap.release()
     result.release()
     return str(int(count/2))
