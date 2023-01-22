@@ -7,6 +7,9 @@ from flask import Flask, request
 from flask_cors import CORS
 import flask
 import json
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import storage
 
 app = Flask(__name__)
 CORS(app)
@@ -21,7 +24,7 @@ def users():
         return flask.jsonify(data)
 
 #main function
-@app.route('/', methods=["POST"])
+@app.route('/', methods=["GET", "POST"])
 def analyse():
     url = request.get_json()["urlLink"]
     mp_face_mesh = mp.solutions.face_mesh
@@ -38,10 +41,22 @@ def analyse():
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
    
-   
+    # Init firebase with your credentials
+    cred = credentials.Certificate("server/firebase.json")
+    firebase_admin.initialize_app(cred)
+
+    # Get a reference to the storage bucket
+    bucket = storage.bucket()
+
     size = (frame_width, frame_height)
 
-    result = cv2.VideoWriter('server/poseBackend/outputVideos/out.avi', cv2.VideoWriter_fourcc(*"MJPG"), 30, size)
+    result = cv2.VideoWriter('server/poseBackend/outputVideos/out.avi', cv2.cv.CV_FOURCC(*'MJPG'), 30, size)
+
+    # Create a new blob and upload the file
+    blob = bucket.blob("outputVideos/out.avi")
+    blob.upload_from_filename('server/poseBackend/outputVideos/out.avi')
+
+    print(blob.public_url)
 
     while cap.isOpened():
         success, image = cap.read()
