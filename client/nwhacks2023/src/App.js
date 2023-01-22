@@ -7,8 +7,12 @@ import DashboardResults from "./components/DashboardPages/DashboardResults";
 import DashboardSettings from "./components/DashboardPages/DashboardSettings";
 import SettingsPage from "./components/DashboardPages/DashboardSettings copy";
 import DashboardUpload from "./components/DashboardPages/DashboardUpload";
+import axios from 'axios';
+import { useEffect } from "react";
 
 function App() {
+
+
   return (
     <div className="App">
       <Routes>
