@@ -24,6 +24,7 @@ import { Disclosure } from "@headlessui/react";
 import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import "firebase/storage";
 import { PropagateLoader } from "react-spinners";
+import LivepeerContainer from "../LivepeerContainer";
 
 const faqs = [
   {
@@ -501,9 +502,7 @@ export default function DashboardUpload() {
                           </h3>
                         </div>
                         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-                          <video controls>
-                            <source src={videoURL} />
-                          </video>
+                          <LivepeerContainer></LivepeerContainer>
                         </div>
                       </div>
                       <div className="overflow-hidden bg-white shadow sm:rounded-lg w-1/2	">
