@@ -6,8 +6,10 @@ import time
 from flask import Flask, request
 from flask_cors import CORS
 import flask
-import json 
-
+import json
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import storage
 
 app = Flask(__name__)
 CORS(app)
@@ -22,7 +24,7 @@ def users():
         return flask.jsonify(data)
 
 #main function
-@app.route('/', methods=["POST"])
+@app.route('/', methods=["GET", "POST"])
 def analyse():
     url = request.get_json()["video"]
     mp_face_mesh = mp.solutions.face_mesh
@@ -38,6 +40,7 @@ def analyse():
 
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
+   
    
     size = (frame_width, frame_height)
 

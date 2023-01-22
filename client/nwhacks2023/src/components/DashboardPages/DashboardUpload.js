@@ -40,6 +40,7 @@ export default function DashboardUpload() {
 
   const [processing, setProcessing] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [poseEstimation, setPoseEstimation] = useState({});
 
   const handleClick = () => {
     const lang = new Intl.DisplayNames(["en"], {
@@ -142,6 +143,20 @@ export default function DashboardUpload() {
     });
   };
 
+  const getPoseEstimation = (url) => {
+    console.log('got pose estimation request')
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/",
+      data: { urlLink: url },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setPoseEstimation(res);
+    })
+  }
+
   useEffect(() => {
     console.log(analyzedData);
     if (!analyzedData) {
@@ -183,7 +198,9 @@ export default function DashboardUpload() {
           // download url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             setVideoURL(url);
+            getPoseEstimation(url);
             getVideoAnalysis(url);
+           
           });
         }
       );
