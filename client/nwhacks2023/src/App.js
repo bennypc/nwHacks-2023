@@ -1,14 +1,11 @@
+import { Route, Routes, Link } from "react-router-dom";
 import "./App.css";
-import { signInWithGoogle } from "./firebase";
+import Dashboard from "./components/dashboard";
 
 function App() {
   return (
     <div className="App">
       <Dashboard />
-      <button onClick={signInWithGoogle}> Sign In With Google</button>
-      <h1>{localStorage.getItem("name")}</h1>
-      <h1>{localStorage.getItem("email")}</h1>
-      <h1>{localStorage.getItem("profilePic")}</h1>
     </div>
   );
 }
