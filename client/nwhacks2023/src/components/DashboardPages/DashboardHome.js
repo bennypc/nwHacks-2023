@@ -1,5 +1,7 @@
 import { Fragment, useState } from "react";
+import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import TextTransition, { presets } from "react-text-transition";
 import {
   Bars3Icon,
   CalendarIcon,
@@ -46,14 +48,27 @@ const stats = [
     changeType: "decrease",
   },
 ];
-
+const TEXTS = [
+  "Because 'presenting' is no longer a 'tense' situation.",
+  "Because your presentations need a little more 'expression'.",
+  "Presently - Present like a pro, not a 'facial expressionless' robot.",
+  "Because your presentations should be 'eye-catching' not 'eye-rolling'.",
+  "The app that will make your presentations 'speak' for themselves.",
+];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function DashboardHome() {
+  const [index, setIndex] = React.useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  React.useEffect(() => {
+    const intervalId = setInterval(
+      () => setIndex((index) => index + 1),
+      2500 // every 2.5 seconds
+    );
+    return () => clearTimeout(intervalId);
+  }, []);
   return (
     <>
       {/*
@@ -248,10 +263,17 @@ export default function DashboardHome() {
           </div>
           <main className="flex-1">
             <div className="py-6">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <h1 className="text-2xl font-semibold text-gray-900">
-                  Presently
-                </h1>
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-2">
+                <span>
+                  <h1 className="text-4xl font-semibold text-gray-900">
+                    Presently
+                  </h1>
+                  <h1 className="text-2xl font-extralight text-gray-900 mt-1">
+                    <TextTransition springConfig={presets.wobbly}>
+                      {TEXTS[index % TEXTS.length]}
+                    </TextTransition>
+                  </h1>
+                </span>
               </div>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 {/* Replace later*/}
