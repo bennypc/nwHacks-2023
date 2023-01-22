@@ -20,9 +20,11 @@ import "firebase/firestore";
 import storage from "../../firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import axios from "axios";
+import LivepeerContainer from '../LivepeerContainer';
 
 import "firebase/storage";
 import { PropagateLoader } from "react-spinners";
+import { Livepeer } from "../Video";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
@@ -107,6 +109,20 @@ export default function DashboardUpload() {
       return null;
     }
   };
+
+  const getBannedWords = () => {
+    try {
+      const profainWords = analyzedData.data.textualContentModeration.bannedWordsCount;
+      return (
+        <li>
+         {profainWords}
+        </li>
+      )
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
 
   // filedrop
 
@@ -472,10 +488,8 @@ export default function DashboardUpload() {
                             Video Container
                           </h3>
                         </div>
-                        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-                          <video controls>
-                            <source src={videoURL} />
-                          </video>
+                        <div className="border-t border-gray-200 px-4 py-5 sm:p-0 content-center">
+                          <LivepeerContainer></LivepeerContainer>
                         </div>
                       </div>
                       <div className="overflow-hidden bg-white shadow sm:rounded-lg w-1/2	">
@@ -516,6 +530,14 @@ export default function DashboardUpload() {
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                                 {getEmotions() ? getEmotions() : null}
+                              </dd>
+                            </div>
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
+                                Banned Words
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                {getBannedWords() ? getBannedWords() : null}
                               </dd>
                             </div>
                             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
