@@ -29,7 +29,6 @@ import { Livepeer } from "../Video";
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
   { name: "Upload", href: "upload", icon: ArrowUpTrayIcon, current: true },
-  { name: "Results", href: "results", icon: ChartBarIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -42,14 +41,9 @@ export default function DashboardUpload() {
 
   const [processing, setProcessing] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [poseEstimation, setPoseEstimation] = useState({});
 
-  const handleClick = () => {
-    const lang = new Intl.DisplayNames(["en"], {
-      type: "language",
-    });
-
-    console.log(lang.of(analyzedData.data.language));
-  };
+  const handleClick = () => {};
 
   const getLanguage = () => {
     try {
@@ -158,6 +152,20 @@ export default function DashboardUpload() {
     });
   };
 
+  const getPoseEstimation = (url) => {
+    console.log("got pose estimation request");
+    axios({
+      method: "post",
+      url: "http://localhost:8000/",
+      data: { urlLink: url },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      setPoseEstimation(res);
+    });
+  };
+
   useEffect(() => {
     console.log(analyzedData);
     if (!analyzedData) {
@@ -199,6 +207,8 @@ export default function DashboardUpload() {
           // download url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             setVideoURL(url);
+            console.log(url);
+            getPoseEstimation(url);
             getVideoAnalysis(url);
           });
         }
@@ -554,7 +564,6 @@ export default function DashboardUpload() {
                     </div>
                   )}
                 </div>
-                <button onClick={handleClick}>CLICK HERE</button>
                 {/* /End replace */}
               </div>
             </div>
