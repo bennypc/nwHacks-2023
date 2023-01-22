@@ -7,9 +7,6 @@ from flask import Flask, request
 from flask_cors import CORS
 import flask
 import json
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import storage
 
 app = Flask(__name__)
 CORS(app)
@@ -24,9 +21,9 @@ def users():
         return flask.jsonify(data)
 
 #main function
-@app.route('/', methods=["GET", "POST"])
+@app.route('/', methods=["POST"])
 def analyse():
-    url = request.get_json()["video"]
+    url = request.get_json()["urlLink"]
     mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
@@ -55,6 +52,7 @@ def analyse():
         if not success:
             break
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        print("1")
 
         # To improve performance
         image.flags.writeable = False
@@ -168,7 +166,7 @@ def analyse():
             break
     cap.release()
     result.release()
-    return str(int(count/2))
+    return str(int(count/2))            
 
 if __name__ == "__main__":
     app.run("localhost", 8000)
