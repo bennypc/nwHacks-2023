@@ -7,7 +7,7 @@ const apiUrl = "https://api.videoindexer.ai";
 const accountId = "f16e0959-bf49-4d6a-81a3-8d2f57d5bd84" 
 const accountLocation = "trial"; // replace with the account's location, or with “trial” if this is a trial account
 const apiKey = "0abf11ef787d49508e4c0f199a2b3edb"; 
-const videoUrl = "https://firebasestorage.googleapis.com/v0/b/nwhacks2023-5f0e8.appspot.com/o/IMG_1704.MOV?alt=media&token=8a46d7be-f1d1-4b7f-83a6-581837fc833d"
+let videoUrl;
 
 const getAccessToken = async () => { 
     const queryParams = {
@@ -59,7 +59,8 @@ const getVideoStatus = (videoAccessToken, videoId) => {
     })
 }
 
-const getVideoAnalysis = async () => {
+const getVideoAnalysis = async (url) => {
+    videoUrl = url;
     const {data: accessToken} = await getAccessToken()
     const uploadResponse = await uploadVideo(videoUrl, accessToken)
     const videoId = uploadResponse.data["id"]
@@ -88,11 +89,8 @@ const getVideoAnalysis = async () => {
 }
 
 router.post("/", async (req, res) => {
-    const result = await getVideoAnalysis();
+    const result = await getVideoAnalysis(req.body.urlLink);
     res.send(result);
-    // await getVideoAnalysis().then((data) => {
-    //     res.send(data);
-    // })
 })
 
 module.exports = router;

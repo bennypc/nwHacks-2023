@@ -5,11 +5,8 @@ import SignUpPage from "./components/AuthPages/SignUpPage";
 import DashboardHome from "./components/DashboardPages/DashboardHome";
 import DashboardResults from "./components/DashboardPages/DashboardResults";
 import DashboardUpload from "./components/DashboardPages/DashboardUpload";
-import axios from 'axios';
-import { useEffect } from "react";
 
 function App() {
-
 
   return (
     <div className="App">
