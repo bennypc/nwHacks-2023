@@ -11,7 +11,9 @@ mp_drawing = mp.solutions.drawing_utils
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
 
-cap = cv2.VideoCapture('poseVideos/1.mp4')
+cap = cv2.VideoCapture('https://firebasestorage.googleapis.com/v0/b/nwhacks2023-5f0e8.appspot.com/o/IMG_1704.MOV?alt=media&token=8a46d7be-f1d1-4b7f-83a6-581837fc833d')
+prevText = ""
+count = 0
 
 while cap.isOpened():
     success, image = cap.read()
@@ -19,7 +21,10 @@ while cap.isOpened():
     start = time.time()
 
     # Also convert the color space from BGR to RGB
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    try:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    except:
+        break
 
     # To improve performance
     image.flags.writeable = False
@@ -85,16 +90,20 @@ while cap.isOpened():
           
 
             # See where the user's head tilting
-            if y < -10:
+            if y < -7:
                 text = "Looking Left"
-            elif y > 10:
+            elif y > 7:
                 text = "Looking Right"
-            elif x < -10:
+            elif x < -7:
                 text = "Looking Down"
-            elif x > 10:
+            elif x > 7:
                 text = "Looking Up"
             else:
                 text = "Forward"
+
+            if text != prevText:
+                count += 1
+            prevText = text
 
             # Display the nose direction
             nose_3d_projection, jacobian = cv2.projectPoints(nose_3d, rot_vec, trans_vec, cam_matrix, dist_matrix)
@@ -131,5 +140,5 @@ while cap.isOpened():
     if cv2.waitKey(5) == 32:
         break
 
-
 cap.release()
+print(int(count/2))
