@@ -17,6 +17,7 @@
     "react-dropzone": "^14.2.3",
     "react-router-dom": "^6.7.0",
     "react-scripts": "^5.0.1",
+    "react-spinners": "^0.13.8",
     "sort-by": "^0.0.2",
     "web-vitals": "^2.1.4"
   },

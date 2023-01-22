@@ -1,5 +1,7 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useCallback, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useDropzone } from "react-dropzone";
+import "react-spinners";
 import {
   Bars3Icon,
   CalendarIcon,
@@ -10,11 +12,16 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import FileDrop from "../FileDrop";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import storage from "../../firebase.js";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import axios from "axios";
+
+import "firebase/storage";
+import { PropagateLoader } from "react-spinners";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
@@ -28,6 +35,79 @@ function classNames(...classes) {
 
 export default function DashboardUpload() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const [processing, setProcessing] = useState(false);
+  const [completed, setCompleted] = useState(false);
+
+  const handleClick = () => {
+    console.log(processing);
+  };
+
+  const handleClick2 = () => {
+    console.log(completed);
+  };
+  // filedrop
+
+  const [file, setFile] = useState("");
+  const [percent, setPercent] = useState(0);
+
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [filesToUpload, setFilesToUpload] = useState([]);
+  const [analyzedData, setAnalyzedData] = useState({});
+
+  const getVideoAnalysis = (url) => {
+    console.log("request made");
+
+    axios({
+      method: "post",
+      url: "http://localhost:3001/getAnalyzedData",
+      data: { urlLink: url },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      // console.log(res);
+      setAnalyzedData(res);
+      setCompleted(true);
+    });
+  };
+
+  useEffect(() => {
+    console.log(analyzedData);
+    setProcessing(false);
+  }, [analyzedData]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      setFilesToUpload(acceptedFiles);
+    },
+  });
+
+  const handleUpload = () => {
+    setProcessing(true);
+    filesToUpload.forEach((file) => {
+      const storageRef = ref(storage, `/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          // update progress
+          setPercent(percent);
+        },
+        (err) => console.log(err),
+        () => {
+          // download url
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            getVideoAnalysis(url);
+          });
+        }
+      );
+    });
+  };
 
   return (
     <>
@@ -230,8 +310,79 @@ export default function DashboardUpload() {
                 {/* Replace later*/}
                 <div className="py-4">
                   <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 flex justify-center items-center">
-                    <FileDrop />
+                    {!processing && !completed && (
+                      <div>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          {isDragActive ? (
+                            <p className="text-2xl font-semibold">
+                              Drop the files here ...
+                            </p>
+                          ) : (
+                            <div className="text-center flex align-center flex-col items-center">
+                              <ArrowUpTrayIcon className="h-16 w-16 mb-4" />
+                              <p className="text-2xl font-semibold">
+                                Drag 'n' drop some files here, or click to
+                                select files
+                              </p>
+                            </div>
+                          )}
+                          <aside>
+                            {/* <h4>Files</h4> */}
+                            <ul>
+                              {filesToUpload.map((file, index) => (
+                                <li key={index}>{file.name}</li>
+                              ))}
+                            </ul>
+
+                            <ul>
+                              {uploadedFiles.map((file, index) => (
+                                <li key={index}>
+                                  <a href={file.downloadURL}>
+                                    {file.file.name}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </aside>
+                        </div>
+                        {filesToUpload.length !== 0 && (
+                          <div className="flex  align-center flex-col items-center">
+                            <form>
+                              <button
+                                type="button"
+                                onClick={handleUpload}
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
+                                Upload Files
+                              </button>
+                            </form>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {processing && !completed && (
+                      <div className="flex align-center flex-col items-center mt-8">
+                        <PropagateLoader color="#36d7b7" />
+                        <h1 className="mt-14 text-xl text-gray-700 font-semibold">
+                          We're analyzing your video now. This process might
+                          take a few minutes, hang tight!
+                        </h1>
+                      </div>
+                    )}
+                    {!processing && completed && (
+                      <div id="div3">
+                        <div className="flex align-center flex-col items-center">
+                          <h1 className=" text-xl text-gray-700 font-semibold">
+                            Your analysis is complete!
+                          </h1>
+                        </div>
+                      </div>
+                    )}
                   </div>
+
+                  <button onClick={handleClick}>PROCESSING STATE</button>
+                  <button onClick={handleClick2}>COMPLETED STATE</button>
                 </div>
                 {/* /End replace */}
               </div>

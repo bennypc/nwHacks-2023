@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import storage from "../firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import axios from 'axios';
+import axios from "axios";
 
 import "firebase/storage";
 
@@ -16,30 +16,30 @@ export default function FileDrop() {
   const [filesToUpload, setFilesToUpload] = useState([]);
   const [analyzedData, setAnalyzedData] = useState({});
 
+  const getVideoAnalysis = (url) => {
+    console.log("request made");
+    axios({
+      method: "post",
+      url: "http://localhost:3001/getAnalyzedData",
+      data: { urlLink: url },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      // console.log(res);
+      setAnalyzedData(res);
+    });
+  };
+
+  useEffect(() => {
+    console.log(analyzedData);
+  }, [analyzedData]);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
       setFilesToUpload(acceptedFiles);
     },
   });
-
-  const getVideoAnalysis = (url) => {
-    console.log('request made');
-    axios({
-      method: 'post',
-      url: "http://localhost:3001/getAnalyzedData",
-      data: { urlLink: url },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => {
-      // console.log(res);
-      setAnalyzedData(res);
-    })
-  }
-
-  useEffect(() => {
-    console.log(analyzedData);
-  }, [analyzedData])
 
   const handleUpload = () => {
     filesToUpload.forEach((file) => {

@@ -6,6 +6,8 @@ import DashboardHome from "./components/DashboardPages/DashboardHome";
 import DashboardResults from "./components/DashboardPages/DashboardResults";
 import DashboardSettings from "./components/DashboardPages/DashboardSettings";
 import DashboardUpload from "./components/DashboardPages/DashboardUpload";
+import axios from "axios";
+import { useEffect } from "react";
 
 function App() {
   return (
