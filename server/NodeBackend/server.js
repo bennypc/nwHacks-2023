@@ -1,13 +1,11 @@
 const express = require('express');
 const app = express();
-const getVideoAnalysis = require('./analyzer')
+const cors = require('cors');
+app.use(cors())
 const port = 3001;
 
-app.post('/analyzeData', async (req, res) => {
-    const summary = await getVideoAnalysis(req.url)
-    res.send(summary);
-})
-
+const analyzeRouter = require('./routes/analyzer');
+app.use('/getAnalyzedData', analyzeRouter);
 
 app.listen(port, () => {
     console.log('listening on 3001')
