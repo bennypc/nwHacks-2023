@@ -28,20 +28,6 @@ function classNames(...classes) {
 
 export default function DashboardUpload() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [videoLink, setVideoLink] = useState("");
-
-  const addVideo = async (e) => {
-    e.preventDefault();
-
-    try {
-      const docRef = await addDoc(collection(db, "videoLinks"), {
-        videoLink: videoLink,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
 
   return (
     <>
@@ -252,14 +238,6 @@ export default function DashboardUpload() {
                   <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 flex justify-center items-center">
                     <FileDrop />
                   </div>
-
-                  <input
-                    type="text"
-                    placeholder="video link"
-                    value={videoLink}
-                    onChange={(e) => setVideoLink(e.target.value)}
-                  />
-                  <button onClick={addVideo}>Add Video</button>
                 </div>
                 {/* /End replace */}
               </div>
