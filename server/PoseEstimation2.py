@@ -2,11 +2,13 @@ import cv2
 import mediapipe as mp
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-mp_holistic = mp.solutions.holistic
+mp_holistic = mp.solutions.pose
 
+count = 0
+frames = 0
 # For webcam input:
-cap = cv2.VideoCapture('poseVideos/3.mp4')
-with mp_holistic.Holistic(
+cap = cv2.VideoCapture('poseVideos/7.mp4')
+with mp_holistic.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as holistic:
   while cap.isOpened():
@@ -37,9 +39,18 @@ with mp_holistic.Holistic(
         landmark_drawing_spec=mp_drawing_styles
         .get_default_pose_landmarks_style())
 
-    print(results.pose_landmarks.landmark)
-    
+    try:
+        landmarks = results.pose_landmarks.landmark
+        poseLandmarks = mp_holistic.PoseLandmark
+        for i in range(10):
+            if landmarks[i].visibility <= 0.005:
+                count += 1
+            print(landmarks[i].visibility)
+        frames += 1
+    except:
+        pass
     cv2.imshow('MediaPipe Holistic', image)
     if cv2.waitKey(5) & 0xFF == 27:
       break
 cap.release()
+print(count/frames*10)
