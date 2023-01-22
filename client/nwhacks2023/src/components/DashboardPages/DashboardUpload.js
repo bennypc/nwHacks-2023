@@ -13,6 +13,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { collection, addDoc } from "firebase/firestore";
+import { PaperClipIcon } from "@heroicons/react/20/solid";
 import { db } from "../../firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -35,17 +36,52 @@ function classNames(...classes) {
 
 export default function DashboardUpload() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [videoURL, setVideoURL] = useState(false);
 
   const [processing, setProcessing] = useState(false);
   const [completed, setCompleted] = useState(false);
 
   const handleClick = () => {
-    console.log(processing);
+    const lang = new Intl.DisplayNames(["en"], {
+      type: "language",
+    });
+
+    console.log(lang.of(analyzedData.data.language));
   };
 
-  const handleClick2 = () => {
-    console.log(completed);
+  const getLanguage = () => {
+    const lang = new Intl.DisplayNames(["en"], {
+      type: "language",
+    });
+    return lang.of(analyzedData.data.language);
   };
+  const getDetected = () => {
+    const transcript = analyzedData.data.labels;
+    return transcript.map((object) => object.name).join(", ");
+  };
+
+  const getTranscriptText = () => {
+    const transcript = analyzedData.data.transcript;
+    return transcript.map((object) => object.text).join(" ");
+  };
+  const getVideoDuration = () => {
+    return analyzedData.data.duration;
+  };
+  function getSentiments() {
+    const sentiments = analyzedData.data.sentiments;
+    return sentiments.map((object, index) => (
+      <li key={index}>{object.sentimentType + " - " + object.averageScore}</li>
+    ));
+  }
+  const getEmotions = () => {
+    const emotions = analyzedData.data.emotions;
+    return emotions.map((object, index) => (
+      <li key={index}>
+        {object.type + " - " + object.instances[0].confidence}
+      </li>
+    ));
+  };
+
   // filedrop
 
   const [file, setFile] = useState("");
@@ -54,6 +90,8 @@ export default function DashboardUpload() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [filesToUpload, setFilesToUpload] = useState([]);
   const [analyzedData, setAnalyzedData] = useState({});
+
+  const [transcript, setTranscript] = useState("");
 
   const getVideoAnalysis = (url) => {
     console.log("request made");
@@ -74,8 +112,18 @@ export default function DashboardUpload() {
 
   useEffect(() => {
     console.log(analyzedData);
+    if (!analyzedData) {
+      processData();
+    }
+
     setProcessing(false);
   }, [analyzedData]);
+
+  const processData = () => {
+    const textArray = analyzedData.data.transcript.map((object) => object.text);
+    const joinedText = textArray.join(" ");
+    setTranscript(joinedText);
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -102,6 +150,7 @@ export default function DashboardUpload() {
         () => {
           // download url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            setVideoURL(url);
             getVideoAnalysis(url);
           });
         }
@@ -306,11 +355,11 @@ export default function DashboardUpload() {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h1 className="text-2xl font-semibold text-gray-900">Upload</h1>
               </div>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mt-2">
                 {/* Replace later*/}
                 <div className="py-4">
-                  <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 flex justify-center items-center">
-                    {!processing && !completed && (
+                  {!processing && !completed && (
+                    <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 flex justify-center items-center">
                       <div>
                         <div {...getRootProps()}>
                           <input {...getInputProps()} />
@@ -360,8 +409,10 @@ export default function DashboardUpload() {
                           </div>
                         )}
                       </div>
-                    )}
-                    {processing && !completed && (
+                    </div>
+                  )}
+                  {processing && !completed && (
+                    <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 flex justify-center items-center">
                       <div className="flex align-center flex-col items-center mt-8">
                         <PropagateLoader color="#36d7b7" />
                         <h1 className="mt-14 text-xl text-gray-700 font-semibold">
@@ -369,21 +420,85 @@ export default function DashboardUpload() {
                           take a few minutes, hang tight!
                         </h1>
                       </div>
-                    )}
-                    {!processing && completed && (
-                      <div id="div3">
-                        <div className="flex align-center flex-col items-center">
-                          <h1 className=" text-xl text-gray-700 font-semibold">
-                            Your analysis is complete!
-                          </h1>
+                    </div>
+                  )}
+                  {!processing && completed && (
+                    <div className="flex flex-row" id="div3">
+                      <div className="overflow-hidden bg-white shadow sm:rounded-lg w-2/5 mr-6">
+                        <div className="px-4 py-5 sm:px-6">
+                          <h3 className="text-lg font-medium leading-6 text-gray-900">
+                            Video Container
+                          </h3>
+                        </div>
+                        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+                          <video controls>
+                            <source src={videoURL} />
+                          </video>
                         </div>
                       </div>
-                    )}
-                  </div>
-
-                  <button onClick={handleClick}>PROCESSING STATE</button>
-                  <button onClick={handleClick2}>COMPLETED STATE</button>
+                      <div className="overflow-hidden bg-white shadow sm:rounded-lg w-1/2	">
+                        <div className="px-4 py-5 sm:px-6">
+                          <h3 className="text-lg font-medium leading-6 text-gray-900">
+                            Analysis Results
+                          </h3>
+                        </div>
+                        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+                          <dl className="sm:divide-y sm:divide-gray-200">
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
+                                Language
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                {getLanguage()}
+                              </dd>
+                            </div>
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
+                                Video Duration
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                {getVideoDuration()}
+                              </dd>
+                            </div>
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
+                                Sentimental Analysis
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                {getSentiments()}
+                              </dd>
+                            </div>
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
+                                Emotional insights
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                {getEmotions()}
+                              </dd>
+                            </div>
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
+                                Transcript
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                {getTranscriptText()}
+                              </dd>
+                            </div>
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
+                                Detected in video
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                {getDetected()}
+                              </dd>
+                            </div>
+                          </dl>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
+                <button onClick={handleClick}>CLICK HERE</button>
                 {/* /End replace */}
               </div>
             </div>
