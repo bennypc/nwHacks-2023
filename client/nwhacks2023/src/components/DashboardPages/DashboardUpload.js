@@ -11,6 +11,10 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import FileDrop from "../FileDrop";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
@@ -24,6 +28,20 @@ function classNames(...classes) {
 
 export default function DashboardUpload() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [videoLink, setVideoLink] = useState("");
+
+  const addVideo = async (e) => {
+    e.preventDefault();
+
+    try {
+      const docRef = await addDoc(collection(db, "videoLinks"), {
+        videoLink: videoLink,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
 
   return (
     <>
@@ -234,6 +252,14 @@ export default function DashboardUpload() {
                   <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 flex justify-center items-center">
                     <FileDrop />
                   </div>
+
+                  <input
+                    type="text"
+                    placeholder="video link"
+                    value={videoLink}
+                    onChange={(e) => setVideoLink(e.target.value)}
+                  />
+                  <button onClick={addVideo}>Add Video</button>
                 </div>
                 {/* /End replace */}
               </div>
