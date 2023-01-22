@@ -82,16 +82,19 @@ export default function FileDrop() {
         <p>{percent} "% done"</p>
       </div> */}
       </div>
-
-      <form>
-        <button
-          type="button"
-          onClick={handleUpload}
-          disabled={filesToUpload.length === 0}
-        >
-          Upload Files
-        </button>
-      </form>
+      {filesToUpload.length !== 0 && (
+        <div className="flex  align-center flex-col items-center">
+          <form>
+            <button
+              type="button"
+              onClick={handleUpload}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Upload Files
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
