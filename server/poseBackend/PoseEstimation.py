@@ -2,13 +2,11 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import time
-from flask import Flask
+from flask import Flask, request
 import flask
 import json
-from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
 
 @app.route('/urls', methods=["GET"])
 def users():
@@ -17,8 +15,9 @@ def users():
         data = json.load(f)
         return flask.jsonify(data)
 
-@app.route('/')
+@app.route('/', methods=['POST'])
 def analyse():
+    #url = request.get_json()['urlLink']
     mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
@@ -26,9 +25,16 @@ def analyse():
 
     drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
-    cap = cv2.VideoCapture("https://firebasestorage.googleapis.com/v0/b/nwhacks2023-5f0e8.appspot.com/o/IMG_1704.MOV?alt=media&token=8a46d7be-f1d1-4b7f-83a6-581837fc833d")
+    cap = cv2.VideoCapture("https://firebasestorage.googleapis.com/v0/b/nwhacks2023-5f0e8.appspot.com/o/IMG_1711.MOV?alt=media&token=7fea6cf9-59de-4f22-b137-310f6a53b00e")
     prevText = ""
     count = 0
+
+    frame_width = int(cap.get(3))
+    frame_height = int(cap.get(4))
+   
+    size = (frame_width, frame_height)
+
+    result = cv2.VideoWriter('out.avi', cv2.VideoWriter_fourcc(*'MJPG'), 30, size)
 
     while cap.isOpened():
         success, image = cap.read()
@@ -36,10 +42,9 @@ def analyse():
         start = time.time()
 
         # Also convert the color space from BGR to RGB
-        try:
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        except:
+        if not success:
             break
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         # To improve performance
         image.flags.writeable = False
@@ -150,12 +155,13 @@ def analyse():
                         landmark_drawing_spec=drawing_spec,
                         connection_drawing_spec=drawing_spec)
 
-        cv2.imshow('Head Pose Estimation', image)
+        result.write(image)
 
         if cv2.waitKey(5) == 32:
             break
 
     cap.release()
+    result.release()
     return str(int(count/2))
 
 if __name__ == "__main__":

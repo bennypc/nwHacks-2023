@@ -5,7 +5,7 @@ cred = credentials.Certificate("server/firebase.json")
 initialize_app(cred, {'storageBucket': 'nwhacks2023-5f0e8.appspot.com'})
 
 # Put your local file path 
-fileName = "myImage.jpg"
+fileName = "server/poseBackend/outputVideos/out.avi"
 bucket = storage.bucket()
 blob = bucket.blob(fileName)
 blob.upload_from_filename(fileName)
