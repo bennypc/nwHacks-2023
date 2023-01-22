@@ -7,8 +7,6 @@ import DashboardResults from "./components/DashboardPages/DashboardResults";
 import DashboardSettings from "./components/DashboardPages/DashboardSettings";
 import DashboardUpload from "./components/DashboardPages/DashboardUpload";
 
-import { useEffect } from "react";
-
 function App() {
   return (
     <div className="App">
