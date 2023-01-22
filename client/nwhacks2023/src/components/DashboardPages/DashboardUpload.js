@@ -542,7 +542,6 @@ export default function DashboardUpload() {
                     </div>
                   )}
                 </div>
-                <button onClick={handleClick}>CLICK HERE</button>
                 {/* /End replace */}
               </div>
             </div>
