@@ -50,36 +50,68 @@ export default function DashboardUpload() {
   };
 
   const getLanguage = () => {
-    const lang = new Intl.DisplayNames(["en"], {
-      type: "language",
-    });
-    return lang.of(analyzedData.data.language);
+    try {
+      const lang = new Intl.DisplayNames(["en"], {
+        type: "language",
+      });
+      return lang.of(analyzedData.data.language);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
   const getDetected = () => {
-    const transcript = analyzedData.data.labels;
-    return transcript.map((object) => object.name).join(", ");
+    try {
+      const transcript = analyzedData.data.labels;
+      return transcript.map((object) => object.name).join(", ");
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
 
   const getTranscriptText = () => {
-    const transcript = analyzedData.data.transcript;
-    return transcript.map((object) => object.text).join(" ");
+    try {
+      const transcript = analyzedData.data.transcript;
+      return transcript.map((object) => object.text).join(" ");
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
   const getVideoDuration = () => {
-    return analyzedData.data.duration;
+    try {
+      return analyzedData.data.duration;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
   function getSentiments() {
-    const sentiments = analyzedData.data.sentiments;
-    return sentiments.map((object, index) => (
-      <li key={index}>{object.sentimentType + " - " + object.averageScore}</li>
-    ));
+    try {
+      const sentiments = analyzedData.data.sentiments;
+      return sentiments.map((object, index) => (
+        <li key={index}>
+          {object.sentimentType + " - " + object.averageScore}
+        </li>
+      ));
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
   const getEmotions = () => {
-    const emotions = analyzedData.data.emotions;
-    return emotions.map((object, index) => (
-      <li key={index}>
-        {object.type + " - " + object.instances[0].confidence}
-      </li>
-    ));
+    try {
+      const emotions = analyzedData.data.emotions;
+      return emotions.map((object, index) => (
+        <li key={index}>
+          {object.type + " - " + object.instances[0].confidence}
+        </li>
+      ));
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
 
   // filedrop
@@ -449,7 +481,7 @@ export default function DashboardUpload() {
                                 Language
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                {getLanguage()}
+                                {getLanguage() ? getLanguage() : null}
                               </dd>
                             </div>
                             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -457,7 +489,7 @@ export default function DashboardUpload() {
                                 Video Duration
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                {getVideoDuration()}
+                                {getVideoDuration() ? getVideoDuration() : null}
                               </dd>
                             </div>
                             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -465,7 +497,7 @@ export default function DashboardUpload() {
                                 Sentimental Analysis
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                {getSentiments()}
+                                {getSentiments() ? getSentiments() : null}
                               </dd>
                             </div>
                             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -473,7 +505,7 @@ export default function DashboardUpload() {
                                 Emotional insights
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                {getEmotions()}
+                                {getEmotions() ? getEmotions() : null}
                               </dd>
                             </div>
                             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -481,7 +513,9 @@ export default function DashboardUpload() {
                                 Transcript
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                {getTranscriptText()}
+                                {getTranscriptText()
+                                  ? getTranscriptText()
+                                  : null}
                               </dd>
                             </div>
                             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
@@ -489,7 +523,7 @@ export default function DashboardUpload() {
                                 Detected in video
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                                {getDetected()}
+                                {getDetected() ? getDetected() : null}
                               </dd>
                             </div>
                           </dl>
