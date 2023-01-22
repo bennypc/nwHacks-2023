@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import storage from "../firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import axios from 'axios';
 
 import "firebase/storage";
 
@@ -13,12 +14,32 @@ export default function FileDrop() {
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [filesToUpload, setFilesToUpload] = useState([]);
+  const [analyzedData, setAnalyzedData] = useState({});
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
       setFilesToUpload(acceptedFiles);
     },
   });
+
+  const getVideoAnalysis = (url) => {
+    console.log('request made');
+    axios({
+      method: 'post',
+      url: "http://localhost:3001/getAnalyzedData",
+      data: { urlLink: url },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      // console.log(res);
+      setAnalyzedData(res);
+    })
+  }
+
+  useEffect(() => {
+    console.log(analyzedData);
+  }, [analyzedData])
 
   const handleUpload = () => {
     filesToUpload.forEach((file) => {
@@ -38,7 +59,7 @@ export default function FileDrop() {
         () => {
           // download url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            console.log(url);
+            getVideoAnalysis(url);
           });
         }
       );
@@ -82,16 +103,19 @@ export default function FileDrop() {
         <p>{percent} "% done"</p>
       </div> */}
       </div>
-
-      <form>
-        <button
-          type="button"
-          onClick={handleUpload}
-          disabled={filesToUpload.length === 0}
-        >
-          Upload Files
-        </button>
-      </form>
+      {filesToUpload.length !== 0 && (
+        <div className="flex  align-center flex-col items-center">
+          <form>
+            <button
+              type="button"
+              onClick={handleUpload}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Upload Files
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

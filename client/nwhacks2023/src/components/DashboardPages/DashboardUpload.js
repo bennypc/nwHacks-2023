@@ -28,20 +28,6 @@ function classNames(...classes) {
 
 export default function DashboardUpload() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [videoLink, setVideoLink] = useState("");
-
-  const addVideo = async (e) => {
-    e.preventDefault();
-
-    try {
-      const docRef = await addDoc(collection(db, "videoLinks"), {
-        videoLink: videoLink,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
 
   return (
     <>
@@ -141,7 +127,7 @@ export default function DashboardUpload() {
                     </nav>
                   </div>
                   <div className="flex flex-shrink-0 bg-gray-700 p-4">
-                    <a href="#" className="group block flex-shrink-0">
+                    <a href="settings" className="group block flex-shrink-0">
                       <div className="flex items-center">
                         <div>
                           <img
@@ -153,9 +139,6 @@ export default function DashboardUpload() {
                         <div className="ml-3">
                           <p className="text-base font-medium text-white">
                             Benny Chinvanich
-                          </p>
-                          <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
-                            View profile
                           </p>
                         </div>
                       </div>
@@ -208,7 +191,7 @@ export default function DashboardUpload() {
               </nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-700 p-4">
-              <a href="#" className="group block w-full flex-shrink-0">
+              <a href="settings" className="group block w-full flex-shrink-0">
                 <div className="flex items-center">
                   <div>
                     <img
@@ -220,9 +203,6 @@ export default function DashboardUpload() {
                   <div className="ml-3">
                     <p className="text-sm font-medium text-white">
                       Benny Chinvanich
-                    </p>
-                    <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200">
-                      View profile
                     </p>
                   </div>
                 </div>
@@ -252,14 +232,6 @@ export default function DashboardUpload() {
                   <div className="h-96 rounded-lg border-4 border-dashed border-gray-200 flex justify-center items-center">
                     <FileDrop />
                   </div>
-
-                  <input
-                    type="text"
-                    placeholder="video link"
-                    value={videoLink}
-                    onChange={(e) => setVideoLink(e.target.value)}
-                  />
-                  <button onClick={addVideo}>Add Video</button>
                 </div>
                 {/* /End replace */}
               </div>
