@@ -10,11 +10,41 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: true },
   { name: "Upload", href: "upload", icon: ArrowUpTrayIcon, current: false },
-  { name: "Results", href: "results", icon: ChartBarIcon, current: false },
+];
+
+const profileStats = [
+  { label: "Days until your next presentation", value: 12 },
+  { label: "Total videos analyzed", value: 43 },
+  { label: "Days of improving presentation skills!", value: 8 },
+];
+
+const stats = [
+  {
+    name: "Total Subscribers",
+    stat: "71,897",
+    previousStat: "70,946",
+    change: "12%",
+    changeType: "increase",
+  },
+  {
+    name: "Avg. Open Rate",
+    stat: "58.16%",
+    previousStat: "56.14%",
+    change: "2.02%",
+    changeType: "increase",
+  },
+  {
+    name: "Avg. Click Rate",
+    stat: "24.57%",
+    previousStat: "28.62%",
+    change: "4.05%",
+    changeType: "decrease",
+  },
 ];
 
 function classNames(...classes) {
@@ -133,7 +163,7 @@ export default function DashboardHome() {
                         </div>
                         <div className="ml-3">
                           <p className="text-base font-medium text-white">
-                            Benny Chinvanich
+                            {"Benny Chinvanich"}
                           </p>
                         </div>
                       </div>
@@ -226,7 +256,53 @@ export default function DashboardHome() {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 {/* Replace later*/}
                 <div className="py-4">
-                  <div className="h-96 rounded-lg border-4 border-dashed border-gray-200" />
+                  <section aria-labelledby="profile-overview-title">
+                    <div className="overflow-hidden rounded-lg bg-white shadow">
+                      <h2 className="sr-only" id="profile-overview-title">
+                        Profile Overview
+                      </h2>
+                      <div className="bg-white p-6">
+                        <div className="sm:flex sm:items-center sm:justify-between">
+                          <div className="sm:flex sm:space-x-5">
+                            <div className="flex-shrink-0">
+                              <img
+                                className="mx-auto h-20 w-20 rounded-full"
+                                src="https://avatars.githubusercontent.com/u/52959626?v=4"
+                                alt=""
+                              />
+                            </div>
+                            <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
+                              <p className="text-sm font-medium text-gray-600">
+                                Welcome back,
+                              </p>
+                              <p className="text-xl font-bold text-gray-900 sm:text-2xl">
+                                "Benny Chinvanich"
+                              </p>
+                            </div>
+                          </div>
+                          <div className="mt-5 flex justify-center sm:mt-0">
+                            <a
+                              href="#"
+                              className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                            >
+                              View profile
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 divide-y divide-gray-200 border-t border-gray-200 bg-gray-50 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
+                        {profileStats.map((stat) => (
+                          <div
+                            key={stat.label}
+                            className="px-6 py-5 text-center text-sm font-medium"
+                          >
+                            <span className="text-gray-900">{stat.value}</span>{" "}
+                            <span className="text-gray-600">{stat.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </section>
                 </div>
                 {/* /End replace */}
               </div>

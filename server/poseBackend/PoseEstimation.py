@@ -26,7 +26,7 @@ def users():
 #main function
 @app.route('/', methods=["GET", "POST"])
 def analyse():
-    url = request.get_json()["video"]
+    url = request.get_json()["urlLink"]
     mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
@@ -54,6 +54,7 @@ def analyse():
         # Also convert the color space from BGR to RGB
         if not success:
             break
+        
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         # To improve performance
