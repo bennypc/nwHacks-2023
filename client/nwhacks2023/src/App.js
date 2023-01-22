@@ -1,11 +1,17 @@
 import { Route, Routes, Link } from "react-router-dom";
 import "./App.css";
-import Dashboard from "./components/dashboard";
+import DashboardHome from "./components/DashboardPages/DashboardHome";
+import DashboardResults from "./components/DashboardPages/DashboardResults";
+import DashboardUpload from "./components/DashboardPages/DashboardUpload";
 
 function App() {
   return (
     <div className="App">
-      <Dashboard />
+      <Routes>
+        <Route path="/" element={<DashboardHome />} />
+        <Route path="/upload" element={<DashboardUpload />} />
+        <Route path="/results" element={<DashboardResults />} />
+      </Routes>
     </div>
   );
 }
