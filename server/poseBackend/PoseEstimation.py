@@ -41,10 +41,22 @@ def analyse():
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
    
-   
+    # Init firebase with your credentials
+    cred = credentials.Certificate("server/firebase.json")
+    firebase_admin.initialize_app(cred)
+
+    # Get a reference to the storage bucket
+    bucket = storage.bucket()
+
     size = (frame_width, frame_height)
 
-    result = cv2.VideoWriter('server/poseBackend/outputVideos/out.avi', cv2.VideoWriter_fourcc(*"MJPG"), 30, size)
+    result = cv2.VideoWriter('server/poseBackend/outputVideos/out.avi', cv2.cv.CV_FOURCC(*'MJPG'), 30, size)
+
+    # Create a new blob and upload the file
+    blob = bucket.blob("outputVideos/out.avi")
+    blob.upload_from_filename('server/poseBackend/outputVideos/out.avi')
+
+    print(blob.public_url)
 
     while cap.isOpened():
         success, image = cap.read()
@@ -56,6 +68,7 @@ def analyse():
             break
         
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        print("1")
 
         # To improve performance
         image.flags.writeable = False
@@ -169,7 +182,7 @@ def analyse():
             break
     cap.release()
     result.release()
-    return str(int(count/2))
+    return str(int(count/2))            
 
 if __name__ == "__main__":
     app.run("localhost", 8000)
