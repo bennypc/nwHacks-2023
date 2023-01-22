@@ -27,7 +27,6 @@ import { PropagateLoader } from "react-spinners";
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
   { name: "Upload", href: "upload", icon: ArrowUpTrayIcon, current: true },
-  { name: "Results", href: "results", icon: ChartBarIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -543,7 +542,6 @@ export default function DashboardUpload() {
                     </div>
                   )}
                 </div>
-                <button onClick={handleClick}>CLICK HERE</button>
                 {/* /End replace */}
               </div>
             </div>

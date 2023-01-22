@@ -66,6 +66,7 @@ def analyse():
         # Also convert the color space from BGR to RGB
         if not success:
             break
+        
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         print("1")
 
