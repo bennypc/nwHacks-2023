@@ -127,7 +127,7 @@ export default function DashboardUpload() {
                     </nav>
                   </div>
                   <div className="flex flex-shrink-0 bg-gray-700 p-4">
-                    <a href="#" className="group block flex-shrink-0">
+                    <a href="settings" className="group block flex-shrink-0">
                       <div className="flex items-center">
                         <div>
                           <img
@@ -139,9 +139,6 @@ export default function DashboardUpload() {
                         <div className="ml-3">
                           <p className="text-base font-medium text-white">
                             Benny Chinvanich
-                          </p>
-                          <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
-                            View profile
                           </p>
                         </div>
                       </div>
@@ -194,7 +191,7 @@ export default function DashboardUpload() {
               </nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-700 p-4">
-              <a href="#" className="group block w-full flex-shrink-0">
+              <a href="settings" className="group block w-full flex-shrink-0">
                 <div className="flex items-center">
                   <div>
                     <img
@@ -206,9 +203,6 @@ export default function DashboardUpload() {
                   <div className="ml-3">
                     <p className="text-sm font-medium text-white">
                       Benny Chinvanich
-                    </p>
-                    <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200">
-                      View profile
                     </p>
                   </div>
                 </div>
