@@ -7,7 +7,6 @@ import {
   import { Livepeer } from './Video';
   import React from 'react';
   
-  const apiKey = '83991dae-682a-475d-bdcd-6d009262ce6e';
 
    
   const client = createReactClient({
