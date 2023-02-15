@@ -5,6 +5,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.13",
+    "@livepeer/react": "^2.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -18,6 +19,8 @@
     "react-router-dom": "^6.7.0",
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.8",
+    "react-spring": "^9.6.1",
+    "react-text-transition": "^3.0.2",
     "sort-by": "^0.0.2",
     "web-vitals": "^2.1.4"
   },

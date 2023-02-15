@@ -20,14 +20,46 @@ import "firebase/firestore";
 import storage from "../../firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import axios from "axios";
-
+import { Disclosure } from "@headlessui/react";
+import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import "firebase/storage";
 import { PropagateLoader } from "react-spinners";
+import LivepeerContainer from "../LivepeerContainer";
+
+const faqs = [
+  {
+    question: "How long can the videos I upload be?",
+    answer:
+      "The length of the videos you upload is completely up to you. However, it's important to keep in mind that longer videos may take longer to process due to the limitations of our APIs. We recommend testing out different video lengths to find the best balance between video duration and processing time.",
+  },
+
+  {
+    question: "What video formats can I upload?",
+    answer:
+      "Our platform is able to process a variety of video formats including MP4, M4A, MVI and MOV. These are some of the most commonly used video formats, and we are confident that most users will be able to upload their videos without any issues. However, If you do have a video in a different format, please reach out to our support team to check if we can process it or not.",
+  },
+  {
+    question: "How can I use Presently to improve my presentation skills?",
+    answer:
+      "Presently analyzes your facial movements, eye contact, and speech patterns to give you feedback on your presentation skills. By using the app, you can gain insights into areas where you can improve, such as maintaining better eye contact or speaking at a more appropriate pace. Additionally, Presently offers exercises and tips that you can use to enhance your skills.",
+  },
+  {
+    question: "Is Presently only for professional presentations?",
+    answer:
+      "Presently is not just for professional presentations. The app can be used for any type of presentation, whether it's for work, school, or personal use. The app's analysis and feedback can be beneficial for anyone looking to improve their public speaking skills.",
+  },
+  {
+    question: "Can I share my Presently analysis with others?",
+    answer:
+      "Yes, you can share your Presently analysis with others. The app allows you to share your Presently analysis via email. This can be especially useful if you're working with a coach or mentor who can provide additional feedback on your presentation skills.",
+  },
+
+  // More questions...
+];
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
   { name: "Upload", href: "upload", icon: ArrowUpTrayIcon, current: true },
-  { name: "Results", href: "results", icon: ChartBarIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -42,13 +74,7 @@ export default function DashboardUpload() {
   const [completed, setCompleted] = useState(false);
   const [poseEstimation, setPoseEstimation] = useState({});
 
-  const handleClick = () => {
-    const lang = new Intl.DisplayNames(["en"], {
-      type: "language",
-    });
-
-    console.log(lang.of(analyzedData.data.language));
-  };
+  const handleClick = () => {};
 
   const getLanguage = () => {
     try {
@@ -144,18 +170,18 @@ export default function DashboardUpload() {
   };
 
   const getPoseEstimation = (url) => {
-    console.log('got pose estimation request')
+    console.log("got pose estimation request");
     axios({
-      method: 'post',
+      method: "post",
       url: "http://localhost:8000/",
       data: { urlLink: url },
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     }).then((res) => {
       setPoseEstimation(res);
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     console.log(analyzedData);
@@ -198,9 +224,9 @@ export default function DashboardUpload() {
           // download url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             setVideoURL(url);
+            console.log(url);
             getPoseEstimation(url);
             getVideoAnalysis(url);
-           
           });
         }
       );
@@ -274,7 +300,7 @@ export default function DashboardUpload() {
                     <div className="flex flex-shrink-0 items-center px-4">
                       <img
                         className="h-8 w-auto"
-                        src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/001/310/023/datas/original.png"
+                        src="/images/logo.png"
                         alt="Your Company"
                       />
                     </div>
@@ -336,13 +362,9 @@ export default function DashboardUpload() {
           <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex flex-shrink-0 items-center px-4">
-                <img
-                  className="h-8 w-auto"
-                  src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/001/310/023/datas/original.png"
-                  alt="Logo"
-                />
+                <h1 className="text-white font-semibold text-2xl">Presently</h1>
               </div>
-              <nav className="mt-5 flex-1 space-y-1 px-2">
+              <nav className="mt-4 flex-1 space-y-1 px-2">
                 {navigation.map((item) => (
                   <a
                     key={item.name}
@@ -480,9 +502,7 @@ export default function DashboardUpload() {
                           </h3>
                         </div>
                         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-                          <video controls>
-                            <source src={videoURL} />
-                          </video>
+                          <LivepeerContainer></LivepeerContainer>
                         </div>
                       </div>
                       <div className="overflow-hidden bg-white shadow sm:rounded-lg w-1/2	">
@@ -519,6 +539,14 @@ export default function DashboardUpload() {
                             </div>
                             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
                               <dt className="text-sm font-medium text-gray-500">
+                                Times lost eye contact
+                              </dt>
+                              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                                28
+                              </dd>
+                            </div>
+                            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                              <dt className="text-sm font-medium text-gray-500">
                                 Emotional insights
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
@@ -549,7 +577,60 @@ export default function DashboardUpload() {
                     </div>
                   )}
                 </div>
-                <button onClick={handleClick}>CLICK HERE</button>
+
+                {!completed && (
+                  <div className="bg-white mb-8">
+                    <div className="mx-auto max-w-7xl mt-6">
+                      <div className="mx-auto max-w-5xl divide-y divide-gray-900/10">
+                        <h2 className="text-2xl font-bold leading-10 tracking-tight text-gray-900">
+                          Frequently asked questions
+                        </h2>
+                        <dl className="mt-10 space-y-6 divide-y divide-gray-900/10">
+                          {faqs.map((faq) => (
+                            <Disclosure
+                              as="div"
+                              key={faq.question}
+                              className="pt-6"
+                            >
+                              {({ open }) => (
+                                <>
+                                  <dt>
+                                    <Disclosure.Button className="flex w-full items-start justify-between text-left text-gray-900">
+                                      <span className="text-base font-semibold leading-7">
+                                        {faq.question}
+                                      </span>
+                                      <span className="ml-6 flex h-7 items-center">
+                                        {open ? (
+                                          <MinusSmallIcon
+                                            className="h-6 w-6"
+                                            aria-hidden="true"
+                                          />
+                                        ) : (
+                                          <PlusSmallIcon
+                                            className="h-6 w-6"
+                                            aria-hidden="true"
+                                          />
+                                        )}
+                                      </span>
+                                    </Disclosure.Button>
+                                  </dt>
+                                  <Disclosure.Panel
+                                    as="dd"
+                                    className="mt-2 pr-12"
+                                  >
+                                    <p className="text-base leading-7 text-gray-600">
+                                      {faq.answer}
+                                    </p>
+                                  </Disclosure.Panel>
+                                </>
+                              )}
+                            </Disclosure>
+                          ))}
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {/* /End replace */}
               </div>
             </div>

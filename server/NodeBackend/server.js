@@ -8,6 +8,8 @@ const port = 3001;
 
 const analyzeRouter = require('./routes/analyzer');
 app.use('/getAnalyzedData', analyzeRouter);
+const livepeerRouter = require('./routes/livepeer');
+app.use('/livepeer', livepeerRouter);
 
 app.listen(port, () => {
     console.log('listening on 3001')

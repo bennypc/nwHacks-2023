@@ -19,7 +19,6 @@ import "firebase/firestore";
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
   { name: "Upload", href: "upload", icon: ArrowUpTrayIcon, current: false },
-  { name: "Results", href: "results", icon: ChartBarIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -158,11 +157,7 @@ export default function DashboardSettings() {
           <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex flex-shrink-0 items-center px-4">
-                <img
-                  className="h-8 w-auto"
-                  src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/001/310/023/datas/original.png"
-                  alt="Logo"
-                />
+                <h1 className="text-white font-semibold text-2xl">Presently</h1>
               </div>
               <nav className="mt-5 flex-1 space-y-1 px-2">
                 {navigation.map((item) => (
